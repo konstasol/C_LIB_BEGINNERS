@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define N 5  // Define the number of nodes
+
+// Define the structure of a node
+struct Node{
+    int data;            // The data stored in the node
+    struct Node* next;   // Pointer to the next node in the list
+};
+
+typedef struct Node NODE;        // Create an alias for struct Node as NODE
+typedef struct Node* NODE_PTR;   // Create an alias for pointer to struct Node as NODE_PTR
+
+// Function to free the memory of all nodes
+void clean(NODE_PTR head){
+    NODE_PTR temp;  
+    while(head){
+        temp = head;         // Store the current node in temp
+        head = head->next;   // Move the head pointer to the next node
+        free(temp);          // Free the memory of the current node
+    }
+    
+    printf("\n\nMemory successfully cleaned up!\n");
+}
+
+int main(void){
+    system("chcp 1253>nul");  // Change code page to handle Greek characters (if running on Windows)
+
+    NODE_PTR newnode, head;
+    NODE_PTR current;
+
+    int i;
+    head = NULL;  // Initialize the list as empty
+
+    // Loop to create and insert 5 nodes into the list
+    for(i = 0; i < N; ++i){
+        // Allocate memory for a new node
+        newnode = (NODE_PTR)malloc(sizeof(NODE));  
+        if (!newnode){
+            printf("Memory allocation failed!\n");
+            return 1;  // Exit if memory allocation fails
+        }
+
+        // Ask the user to input a number for the node
+        printf("Enter a number for the node: ");
+        scanf("%d", &newnode->data);
+
+        // Insert the new node at the beginning of the list
+        newnode->next = head;  // Make the new node point to the previous head
+        head = newnode;        // Now, the new node is the head of the list
+    }
+
+    // Print the list
+    printf("The linked list: ");
+    current = head;
+    while (current){
+        printf("%d -->", current->data);  // Print the data of each node
+        current = current->next;          // Move to the next node
+    }
+    printf("NULL\n");  // End of the list
+
+    // Clean up the memory by deleting all nodes
+    clean(head);
+
+    return 0;
+}
