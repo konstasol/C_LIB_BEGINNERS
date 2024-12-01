@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define N 5
+//Hello, in this programm, you add nodes at the end of the linked list
+//You start with an empty list
+//In this example we add 3 nodes, each one at the end
+//Feel free to modify and experiment
+
+// Define a structure for a node (box) with data and a pointer to the next node
+struct Node {
+    int data;              // The number stored in this node
+    struct Node* next;     // Pointer to the next node in the list
+};
+
+typedef struct Node NODE;        // Node is the structure we are using
+typedef struct Node* NODE_PTR;   // NODE_PTR is a pointer to the Node
+
+// This function deletes all the nodes (cleans up the list)
+void clean(NODE_PTR head) {
+    NODE_PTR temp;
+    while (head) {
+        temp = head;
+        head = head->next;  // Move to the next node
+        free(temp);         // Free the memory of the current node (delete it)
+    }
+
+    printf("\n\nMemory cleaned! All nodes are gone!\n");  // Cleanup is complete!
+}
+
+int main(void) {
+    NODE_PTR lastnode;  // Pointer to the last node in the list
+    NODE_PTR newnode, head;  // New node to be added, and the head of the list
+    NODE_PTR current;  // Pointer used for traversing the list
+
+    int i;
+    head = NULL;  // Initialize the list as empty
+
+    // Loop to create and add 3 nodes to the list
+    for (i = 0; i < 3; ++i) {
+        newnode = (NODE_PTR)malloc(sizeof(NODE));  // Allocate memory for a new node
+        if (!newnode) {
+            printf("Memory allocation failed!\n");  // Error if allocation fails
+        }
+
+        // Ask the user for a number to store in the node
+        printf("Enter a number for the node: ");
+        scanf("%d", &newnode->data);
+
+        // If the list is empty, make this the first node
+        if (head == NULL) {
+            head = newnode;
+            lastnode = newnode;
+        } else {
+            lastnode->next = newnode;  // Point the last node to the new node
+            newnode->next = NULL;      // This node doesn't point to anything yet
+            lastnode = newnode;        // Now this is the last node
+        }
+    }
+
+    // Print the list by traversing through the nodes
+    current = head;
+    while (current) {
+        printf("%d -->", current->data);  // Print the data in the current node
+        current = current->next;          // Move to the next node
+    }
+    printf("NULL\n");  // End of the list
+
+    // Call the clean function to delete all nodes and free memory
+    clean(head);
+    head = NULL;  // List is now empty
+
+    return 0;
+}
