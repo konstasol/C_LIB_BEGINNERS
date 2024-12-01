@@ -62,7 +62,7 @@ int main(void) {
     }
 
     // Change the second node's data to 15
-    head->next->data = 15;
+    head->next->data = 2;
 
     // Print the list to see the data
     current = head;
