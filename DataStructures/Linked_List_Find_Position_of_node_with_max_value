@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define the structure of a node (a box with data and a pointer to the next box)
+struct node {
+    int data;          // The number stored in this node
+    struct node* next; // Pointer to the next node in the list
+};
+
+typedef struct node NODE;        // NODE is the structure we are using
+typedef struct node* NODE_PTR;   // NODE_PTR is a pointer to the NODE structure
+
+// This function finds the position of the biggest number in the list
+int bigger(NODE_PTR head) {
+    int count = 0;      // This will keep track of the node position
+    int max = head->data;   // Start by assuming the first node has the max value
+    int maxid = 0;      // Position of the max value
+    NODE_PTR cur = head;  // Start with the head of the list
+
+    // Traverse through the list
+    while (cur) {
+        count++;  // Move to the next node
+        if (cur->data > max) {  // If we find a bigger value
+            max = cur->data;
+            maxid = count;  // Update the position of the max value
+        }
+        cur = cur->next;  // Move to the next node
+    }
+    return maxid;  // Return the position of the largest value
+}
+
+// This function deletes all nodes and frees the memory
+void delete(NODE_PTR head) {
+    NODE_PTR temp;
+    // Traverse through the list and free each node
+    while (head) {
+        temp = head;
+        head = head->next;  // Move to the next node
+        free(temp);         // Free the memory of the current node
+    }
+    puts("\nMemory freed! All nodes are gone.");
+}
+
+int main(void) {
+    // Create a sample linked list with nodes containing values 8 down to 1
+    NODE_PTR head = NULL;
+    NODE_PTR current;
+    NODE_PTR newnode;
+    int i, big;
+
+    // Creating a list of nodes (8 -> 7 -> 6 -> ... -> 1)
+    for (i = 8; i > 0; --i) {
+        newnode = (NODE_PTR)malloc(sizeof(NODE));  // Allocate memory for a new node
+        if (!newnode) {
+            printf("Memory allocation failed!");
+            return 1;  // Exit if memory allocation fails
+        }
+
+        newnode->data = i;  // Set the data of the new node
+        newnode->next = head;  // Point to the previous first node
+        head = newnode;  // Update head to the new node
+    }
+
+    // Change the second node's data to 15
+    head->next->data = 15;
+
+    // Print the list to see the data
+    current = head;
+    while (current) {
+        printf("%d -->", current->data);  // Print data of each node
+        current = current->next;  // Move to the next node
+    }
+    printf("NULL\n");
+
+    // Find the position of the largest value
+    big = bigger(head);
+    printf("\nPosition of the largest value: element %d \n", big);
+
+    // Delete all nodes and free the memory
+    delete(head);
+
+    return 0;
+}
