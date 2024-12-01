@@ -1,0 +1,93 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define N 5
+
+// This is the structure of the "box" (node), with data (number) and the pointer to the next node
+struct nodelist {
+    int number;            // The number stored in the node
+    struct nodelist *next; // The pointer to the next node in the list
+};
+
+typedef struct nodelist NODE;        // NODE is the structure type
+typedef struct nodelist *NODE_PTR;   // NODE_PTR is a pointer to a NODE
+
+// This function deletes the node at position 'n' from the list
+int clean(NODE_PTR* head, int n) {
+    if (*head == NULL) {
+        puts("The list is empty!");
+        return -1;
+    }
+
+    NODE_PTR temp = *head;
+    NODE_PTR prev = NULL;
+    int count = 1;
+
+    while (temp) {
+        if (count == n) {  // Found the node to delete
+            if (prev) {
+                prev->next = temp->next;  // Point the previous node to the next node
+            } else {
+                *head = temp->next;  // If it's the first node, update the head
+            }
+            free(temp);  // Free memory for the node
+            puts("\nNode deleted successfully!");
+            return 0;
+        } else {
+            prev = temp;
+            temp = temp->next;
+            count++;
+        }
+    }
+
+    printf("\n\nNode not found!\n");
+    return -1;
+}
+
+int main(void) {
+    NODE_PTR newnode, head;
+    NODE_PTR current;
+    int i;
+
+    // Initialize the list as empty
+    head = NULL;
+
+    // Add 10 nodes to the list, with numbers decreasing from 10 to 1
+    for (i = 20; i > 10; --i) {
+        // Allocate memory for a new node
+        newnode = (NODE_PTR)malloc(sizeof(NODE));
+        if (!newnode) {
+            printf("Memory allocation failed!\n");
+            return -1;
+        }
+
+        newnode->number = i;  // Set the number of the node
+
+        // Insert the new node at the beginning of the list
+        newnode->next = head;
+        head = newnode;
+    }
+
+    // Print the list before deletion
+    current = head;
+    puts("Original list: ");
+    while (current) {
+        printf("%d -->", current->number);
+        current = current->next;
+    }
+    printf("NULL\n");
+
+    // Delete the 3rd node in the list  --->You can modify this, or ask the user to insert
+    //the node to delete, it's up to you
+    int t = clean(&head, 3);
+
+    // Print the list after deletion
+    puts("List after deletion: ");
+    current = head;
+    while (current) {
+        printf("%d -->", current->number);
+        current = current->next;
+    }
+    printf("NULL\n");
+
+    return 0;
+}
